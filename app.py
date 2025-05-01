@@ -33,7 +33,7 @@ st.markdown("""
 
 st.title("🕸️ Simulador de Vida Atrapada en una Computadora 🧠💻")
 
-image = Image.open("Cursed,jpg")  # Puedes cambiarla por una imagen de glitch o terror
+image = Image.open("Cursed.jpg")  # Puedes cambiarla por una imagen de glitch o terror
 st.image(image, width=350)
 
 with st.sidebar:
