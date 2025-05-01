@@ -2,94 +2,91 @@ import streamlit as st
 import os
 import time
 import glob
-import os
 from gtts import gTTS
 from PIL import Image
 import base64
 
-st.title("Conversión de Texto a Audio")
-image = Image.open('gato_raton.png')
-st.image(image, width=350)
-with st.sidebar:
-    st.subheader("Esrcibe y/o selecciona texto para ser escuchado.")
+# --- INTERFAZ RENOVADA ---
+st.set_page_config(page_title="Narrador Virtual", layout="centered")
 
+st.markdown("""
+    <style>
+    .main {
+        background-color: #f0f2f6;
+        padding: 2rem;
+        border-radius: 12px;
+    }
+    .stButton > button {
+        background-color: #4CAF50;
+        color: white;
+        font-weight: bold;
+        border-radius: 10px;
+    }
+    </style>
+""", unsafe_allow_html=True)
 
-try:
-    os.mkdir("temp")
-except:
-    pass
+st.title("🗣️ Narrador Virtual")
 
-st.subheader("Una pequeña Fábula.")
-st.write('¡Ay! -dijo el ratón-. El mundo se hace cada día más pequeño. Al principio era tan grande que le tenía miedo. '  
-         ' Corría y corría y por cierto que me alegraba ver esos muros, a diestra y siniestra, en la distancia. ' 
-         ' Pero esas paredes se estrechan tan rápido que me encuentro en el último cuarto y ahí en el rincón está '  
-         ' la trampa sobre la cual debo pasar. Todo lo que debes hacer es cambiar de rumbo dijo el gato...y se lo comió. ' 
-         '  '
-         ' Franz Kafka.'
-        
-        )
-           
-st.markdown(f"Quieres escucharlo?, copia el texto")
-text = st.text_area("Ingrese El texto a escuchar.")
+col1, col2 = st.columns([1, 2])
+with col1:
+    image = Image.open("gato_raton.png")
+    st.image(image, width=250)
+with col2:
+    st.subheader("Transforma tu texto en voz")
+    st.markdown(
+        "Convierte cuentos, reflexiones o ideas en audio fácilmente usando inteligencia artificial."
+    )
 
-tld='com'
-option_lang = st.selectbox(
-    "Selecciona el lenguaje",
-    ("Español", "English"))
-if option_lang=="Español" :
-    lg='es'
-if option_lang=="English" :
-    lg='en'
+# --- CREAR CARPETA TEMPORAL ---
+os.makedirs("temp", exist_ok=True)
 
-def text_to_speech(text, tld,lg):
-    
-    tts = gTTS(text,lang=lg) # tts = gTTS(text,'en', tld, slow=False)
-    try:
-        my_file_name = text[0:20]
-    except:
-        my_file_name = "audio"
-    tts.save(f"temp/{my_file_name}.mp3")
-    return my_file_name, text
+# --- TEXTO EJEMPLO ---
+st.markdown("---")
+st.markdown("### 🐭 Una Fábula para Escuchar")
+fabula = (
+    "\u00a1Ay! -dijo el rat\u00f3n-. El mundo se hace cada d\u00eda m\u00e1s peque\u00f1o. Al principio era tan grande que le ten\u00eda miedo. "
+    "Corr\u00eda y corr\u00eda y por cierto que me alegraba ver esos muros, a diestra y siniestra, en la distancia. "
+    "Pero esas paredes se estrechan tan r\u00e1pido que me encuentro en el \u00faltimo cuarto y ah\u00ed en el rinc\u00f3n est\u00e1 la trampa sobre la cual debo pasar. "
+    "Todo lo que debes hacer es cambiar de rumbo -dijo el gato... y se lo comi\u00f3. \n\n_Franz Kafka._"
+)
+st.info(fabula)
 
+# --- ENTRADA DE TEXTO ---
+text = st.text_area("\ud83c\udfa7 Escribe o pega tu texto:", height=150, value=fabula)
 
-#display_output_text = st.checkbox("Verifica el texto")
+# --- SELECCIÓN DE IDIOMA ---
+language = st.selectbox("\ud83c\udf0d Idioma del Audio:", ("Espa\u00f1ol", "English"))
+lg = "es" if language == "Espa\u00f1ol" else "en"
 
-if st.button("convertir a Audio"):
-     result, output_text = text_to_speech(text, 'com',lg)#'tld
-     audio_file = open(f"temp/{result}.mp3", "rb")
-     audio_bytes = audio_file.read()
-     st.markdown(f"## Tú audio:")
-     st.audio(audio_bytes, format="audio/mp3", start_time=0)
+# --- CONVERSIÓN DE TEXTO A AUDIO ---
+def text_to_speech(text, lg):
+    tts = gTTS(text, lang=lg)
+    filename = f"temp/audio_{int(time.time())}.mp3"
+    tts.save(filename)
+    return filename
 
-     #if display_output_text:
-     
-     #st.write(f" {output_text}")
-    
-#if st.button("ElevenLAabs",key=2):
-#     from elevenlabs import play
-#     from elevenlabs.client import ElevenLabs
-#     client = ElevenLabs(api_key="a71bb432d643bbf80986c0cf0970d91a", # Defaults to ELEVEN_API_KEY)
-#     audio = client.generate(text=f" {output_text}",voice="Rachel",model="eleven_multilingual_v1")
-#     audio_file = open(f"temp/{audio}.mp3", "rb")
+if st.button("\ud83d\udd0a Generar Audio"):
+    if text.strip():
+        filepath = text_to_speech(text, lg)
+        audio_file = open(filepath, "rb")
+        audio_bytes = audio_file.read()
 
-     with open(f"temp/{result}.mp3", "rb") as f:
-         data = f.read()
+        st.success("\ud83d\udd0a Reproduciendo tu audio:")
+        st.audio(audio_bytes, format="audio/mp3")
 
-     def get_binary_file_downloader_html(bin_file, file_label='File'):
-        bin_str = base64.b64encode(data).decode()
-        href = f'<a href="data:application/octet-stream;base64,{bin_str}" download="{os.path.basename(bin_file)}">Download {file_label}</a>'
-        return href
-     st.markdown(get_binary_file_downloader_html("audio.mp3", file_label="Audio File"), unsafe_allow_html=True)
+        with open(filepath, "rb") as f:
+            b64 = base64.b64encode(f.read()).decode()
+            dl_link = f'<a href="data:audio/mp3;base64,{b64}" download="tu_audio.mp3">\ud83d\udcc1 Descargar Audio</a>'
+            st.markdown(dl_link, unsafe_allow_html=True)
+    else:
+        st.warning("\u26a0\ufe0f Por favor ingresa texto para convertirlo.")
 
-def remove_files(n):
-    mp3_files = glob.glob("temp/*mp3")
-    if len(mp3_files) != 0:
-        now = time.time()
-        n_days = n * 86400
-        for f in mp3_files:
-            if os.stat(f).st_mtime < now - n_days:
-                os.remove(f)
-                print("Deleted ", f)
+# --- BORRADO AUTOMÁTICO DE ARCHIVOS ANTIGUOS ---
+def remove_old_files(days_old):
+    cutoff = time.time() - (days_old * 86400)
+    for file in glob.glob("temp/*.mp3"):
+        if os.path.getmtime(file) < cutoff:
+            os.remove(file)
+            print("Archivo eliminado:", file)
 
-
-remove_files(7)
+remove_old_files(7)
