@@ -6,87 +6,83 @@ from gtts import gTTS
 from PIL import Image
 import base64
 
-# --- INTERFAZ RENOVADA ---
-st.set_page_config(page_title="Narrador Virtual", layout="centered")
-
+# 🎃 Estilo oscuro personalizado
 st.markdown("""
     <style>
-    .main {
-        background-color: #f0f2f6;
-        padding: 2rem;
-        border-radius: 12px;
+    body { background-color: #000000; }
+    .stApp {
+        background-color: #0a0a0a;
+        color: #ff3333;
+        font-family: 'Courier New', monospace;
     }
-    .stButton > button {
-        background-color: #4CAF50;
-        color: white;
-        font-weight: bold;
-        border-radius: 10px;
+    h1, h2, h3, .css-10trblm { 
+        color: #ff0000; 
+        text-shadow: 0 0 5px #ff0000;
+    }
+    .stButton>button {
+        background-color: #1a1a1a;
+        color: #ff4444;
+        border: 1px solid #ff0000;
+        transition: 0.3s;
+    }
+    .stButton>button:hover {
+        background-color: #550000;
     }
     </style>
 """, unsafe_allow_html=True)
 
-st.title("🗣️ Narrador Virtual")
+st.title("🕸️ Simulador de Vida Atrapada en una Computadora 🧠💻")
 
-col1, col2 = st.columns([1, 2])
-with col1:
-    image = Image.open("gato_raton.png")
-    st.image(image, width=250)
-with col2:
-    st.subheader("Transforma tu texto en voz")
-    st.markdown(
-        "Convierte cuentos, reflexiones o ideas en audio fácilmente usando inteligencia artificial."
-    )
+image = Image.open("Cursed,jpg")  # Puedes cambiarla por una imagen de glitch o terror
+st.image(image, width=350)
 
-# --- CREAR CARPETA TEMPORAL ---
-os.makedirs("temp", exist_ok=True)
+with st.sidebar:
+    st.subheader("💀 Escoge tu sentencia... quiero decir... texto para escuchar.")
+    st.write("Tu voz resonará en este vacío eterno.")
 
-# --- TEXTO EJEMPLO ---
-st.markdown("---")
-st.markdown("### 🐭 Una Fábula para Escuchar")
-fabula = (
-    "\u00a1Ay! -dijo el rat\u00f3n-. El mundo se hace cada d\u00eda m\u00e1s peque\u00f1o. Al principio era tan grande que le ten\u00eda miedo. "
-    "Corr\u00eda y corr\u00eda y por cierto que me alegraba ver esos muros, a diestra y siniestra, en la distancia. "
-    "Pero esas paredes se estrechan tan r\u00e1pido que me encuentro en el \u00faltimo cuarto y ah\u00ed en el rinc\u00f3n est\u00e1 la trampa sobre la cual debo pasar. "
-    "Todo lo que debes hacer es cambiar de rumbo -dijo el gato... y se lo comi\u00f3. \n\n_Franz Kafka._"
-)
-st.info(fabula)
+try:
+    os.mkdir("temp")
+except:
+    pass
 
-# --- ENTRADA DE TEXTO ---
-text = st.text_area("\ud83c\udfa7 Escribe o pega tu texto:", height=150, value=fabula)
+st.subheader("📜 Fragmento del código maldito:")
+st.write("""¡Ay! -dijo el ratón-. El mundo se hace cada día más pequeño...
+Las paredes se cierran... y en la esquina está la trampa.
+“Solo cambia de rumbo”, dijo el gato...
+...y se lo comió.
+Kafka sabía lo que era estar atrapado.""")
 
-# --- SELECCIÓN DE IDIOMA ---
-language = st.selectbox("\ud83c\udf0d Idioma del Audio:", ("Espa\u00f1ol", "English"))
-lg = "es" if language == "Espa\u00f1ol" else "en"
+st.markdown("¿Te atreves a escucharlo? Copia un texto… si te atreves.")
+text = st.text_area("✍️ Ingrese el texto maldito:")
 
-# --- CONVERSIÓN DE TEXTO A AUDIO ---
-def text_to_speech(text, lg):
+option_lang = st.selectbox("🌐 Lenguaje del conjuro:", ("Español", "English"))
+lg = "es" if option_lang == "Español" else "en"
+
+def text_to_speech(text, tld, lg):
     tts = gTTS(text, lang=lg)
-    filename = f"temp/audio_{int(time.time())}.mp3"
-    tts.save(filename)
-    return filename
+    file_name = text[0:20].replace(" ", "_") or "audio"
+    path = f"temp/{file_name}.mp3"
+    tts.save(path)
+    return path
 
-if st.button("\ud83d\udd0a Generar Audio"):
-    if text.strip():
-        filepath = text_to_speech(text, lg)
-        audio_file = open(filepath, "rb")
-        audio_bytes = audio_file.read()
+if st.button("🔊 Convertir a Audio"):
+    audio_path = text_to_speech(text, 'com', lg)
+    st.markdown("🎧 He aquí tu mensaje... o maldición:")
+    st.audio(audio_path, format="audio/mp3", start_time=0)
 
-        st.success("\ud83d\udd0a Reproduciendo tu audio:")
-        st.audio(audio_bytes, format="audio/mp3")
+    with open(audio_path, "rb") as f:
+        data = f.read()
 
-        with open(filepath, "rb") as f:
-            b64 = base64.b64encode(f.read()).decode()
-            dl_link = f'<a href="data:audio/mp3;base64,{b64}" download="tu_audio.mp3">\ud83d\udcc1 Descargar Audio</a>'
-            st.markdown(dl_link, unsafe_allow_html=True)
-    else:
-        st.warning("\u26a0\ufe0f Por favor ingresa texto para convertirlo.")
+    def get_download_link(data, filename):
+        b64 = base64.b64encode(data).decode()
+        return f'<a href="data:application/octet-stream;base64,{b64}" download="{filename}">⬇️ Descargar Audio</a>'
 
-# --- BORRADO AUTOMÁTICO DE ARCHIVOS ANTIGUOS ---
-def remove_old_files(days_old):
-    cutoff = time.time() - (days_old * 86400)
-    for file in glob.glob("temp/*.mp3"):
-        if os.path.getmtime(file) < cutoff:
-            os.remove(file)
-            print("Archivo eliminado:", file)
+    st.markdown(get_download_link(data, "audio.mp3"), unsafe_allow_html=True)
 
-remove_old_files(7)
+def remove_files(n_days):
+    now = time.time()
+    for f in glob.glob("temp/*.mp3"):
+        if os.stat(f).st_mtime < now - n_days * 86400:
+            os.remove(f)
+
+remove_files(7)
