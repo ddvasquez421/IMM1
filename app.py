@@ -46,11 +46,70 @@ except:
     pass
 
 st.subheader("📜 Fragmento del código maldito:")
-st.write("""¡Ay! -dijo el ratón-. El mundo se hace cada día más pequeño...
-Las paredes se cierran... y en la esquina está la trampa.
-“Solo cambia de rumbo”, dijo el gato...
-...y se lo comió.
-Kafka sabía lo que era estar atrapado.""")
+st.write("""Hermana mayor vomita sangre,
+La hermana menor escupe fuego
+Mientras el dulce Tomino
+simplemente escupe las joyas.2
+
+Tomino está completamente solo
+Ve cayendo en ese infierno,
+Un infierno de oscuridad absoluta,
+Sin siquiera flores.
+
+¿Es la hermana mayor de Tomino?
+¿el que lo azota?
+El propósito de la flagelación
+cuelga oscuro en su mente.3
+
+¡Azotándolo y golpeándolo, ah!
+Pero nunca del todo destrozado.
+Un camino seguro hacia Avici,4
+el infierno eterno.
+
+En el más negro de los infiernos
+Guíalo ahora, te lo ruego.
+a la oveja de oro,
+al ruiseñor.
+
+¿Cuánto puso?
+en esa bolsa de cuero
+para prepararse para su viaje
+¿El infierno eterno?
+
+Se acerca la primavera
+al valle, al bosque,
+a los abismos en espiral
+del infierno más negro.
+
+El ruiseñor en su jaula,
+las ovejas a bordo del carro,
+y las lágrimas brotan de los ojos
+del dulce Tomino.5
+
+Canta, oh ruiseñor,
+en el vasto y brumoso bosque—
+Grita, pero solo falla.
+su hermana pequeña.
+
+Su desesperación lamentable
+ecos por todo el infierno—
+Una peonía de zorro
+Abre sus pétalos dorados.
+
+Más allá de las siete montañas
+y siete ríos del infierno—
+el viaje solitario
+del dulce Tomino.
+
+Si en este infierno se encuentran,
+Que vengan entonces a mí, por favor,
+esas afiladas puntas de castigo
+Desde la montaña Needle.6
+
+No sólo por un capricho vacío
+¿Es la carne atravesada por alfileres de color rojo sangre?
+Sirven como señales infernales
+Para el dulce Tomino.""")
 
 st.markdown("¿Te atreves a escucharlo? Copia un texto… si te atreves.")
 text = st.text_area("✍️ Ingrese el texto maldito:")
