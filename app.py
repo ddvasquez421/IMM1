@@ -49,7 +49,7 @@ st.subheader("📜 Fragmento del código maldito:")
 st.write("""Hermana mayor vomita sangre,
 La hermana menor escupe fuego
 Mientras el dulce Tomino
-simplemente escupe las joyas.2
+simplemente escupe las joyas.
 
 Tomino está completamente solo
 Ve cayendo en ese infierno,
@@ -59,11 +59,11 @@ Sin siquiera flores.
 ¿Es la hermana mayor de Tomino?
 ¿el que lo azota?
 El propósito de la flagelación
-cuelga oscuro en su mente.3
+cuelga oscuro en su mente.
 
 ¡Azotándolo y golpeándolo, ah!
 Pero nunca del todo destrozado.
-Un camino seguro hacia Avici,4
+Un camino seguro hacia Avici,
 el infierno eterno.
 
 En el más negro de los infiernos
@@ -84,7 +84,7 @@ del infierno más negro.
 El ruiseñor en su jaula,
 las ovejas a bordo del carro,
 y las lágrimas brotan de los ojos
-del dulce Tomino.5
+del dulce Tomino.
 
 Canta, oh ruiseñor,
 en el vasto y brumoso bosque—
@@ -104,7 +104,7 @@ del dulce Tomino.
 Si en este infierno se encuentran,
 Que vengan entonces a mí, por favor,
 esas afiladas puntas de castigo
-Desde la montaña Needle.6
+Desde la montaña Needle.
 
 No sólo por un capricho vacío
 ¿Es la carne atravesada por alfileres de color rojo sangre?
